@@ -1,0 +1,30 @@
+# Node.js dependencies (regenerate with npm install)
+node_modules
+
+# Lock file for Node.js dependencies (regenerate with npm install)
+package-lock.json
+
+# Runtime data
+tmp/
+temp/
+
+# Session data
+session/
+
+# Environment variables file
+.env
+
+# Log files
+*.log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# IDE files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
