@@ -28,3 +28,7 @@ yarn-error.log
 *.njsproj
 *.sln
 *.sw?
+
+# Private files
+baileys_store.json
+data/
