@@ -23,4 +23,4 @@ jobs:
           screen -S spamHamBot -X quit || true
           
           # Start new detached screen session
-          screen -dmS spamHamBot bash -c 'node Repos/Node.js/Other/sprusrxeroxx/SpamHammer/testingindex.js'
+          screen -dmS spamHamBot bash -c 'node Repos/Node.js/Other/sprusrxeroxx/SpamHammer/SpamHammer/testing/index.js'
