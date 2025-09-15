@@ -16,12 +16,16 @@ const channelInfo = {
 // Path to store auto status configuration
 const configPath = path.join(__dirname, '../data/autoStatus.json');
 
-// Initialize config file if it doesn't exist
+// Initialize config file and directory if they don't exist
+const configDir = path.dirname(configPath);
+if (!fs.existsSync(configDir)) {
+    fs.mkdirSync(configDir, { recursive: true });
+}
 if (!fs.existsSync(configPath)) {
     fs.writeFileSync(configPath, JSON.stringify({ 
         enabled: false, 
         reactOn: false 
-    }));
+    }, null, 2));
 }
 
 async function autoStatusCommand(sock, chatId, msg, args) {
@@ -255,4 +259,4 @@ async function handleStatusUpdate(sock, status) {
 module.exports = {
     autoStatusCommand,
     handleStatusUpdate
-}; 
+};
