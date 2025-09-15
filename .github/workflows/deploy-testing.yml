@@ -12,10 +12,13 @@ jobs:
     steps:
       - name: Checkout latest code
         uses: actions/checkout@v4
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
         run: |
-          npm install
+          npm ci
           
       - name: Restart Node.js app in screen
         run: |
