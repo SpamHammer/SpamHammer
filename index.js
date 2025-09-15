@@ -48,6 +48,12 @@ const { join } = require('path')
 // Import lightweight store
 const store = require('./lib/lightweight_store')
 
+// Import data initializer
+const { initializeDataFiles } = require('./lib/dataInitializer');
+
+// Initialize data files
+initializeDataFiles();
+
 // Initialize store
 store.readFromFile()
 const settings = require('./settings')
