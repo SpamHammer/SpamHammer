@@ -58,7 +58,7 @@ const blurCommand = require('./commands/img-blur');
 const welcomeCommand = require('./commands/welcome');
 const goodbyeCommand = require('./commands/goodbye');
 const githubCommand = require('./commands/github');
-const { handleAntiBadwordCommand, handleBadwordDetection } = require('./lib/antibadword');
+const { handleBadwordDetection } = require('./lib/antibadword');
 const antibadwordCommand = require('./commands/antibadword');
 const { handleChatbotCommand, handleChatbotResponse } = require('./commands/chatbot');
 const takeCommand = require('./commands/take');
@@ -106,7 +106,7 @@ const updateCommand = require('./commands/update');
 const removebgCommand = require('./commands/removebg');
 const { reminiCommand } = require('./commands/remini');
 const { igsCommand } = require('./commands/igs');
-const { anticallCommand, readState: readAnticallState } = require('./commands/anticall');
+const { anticallCommand } = require('./commands/anticall');
 
 // Global settings
 global.packname = settings.packname;
