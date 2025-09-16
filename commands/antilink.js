@@ -1,5 +1,5 @@
 const { bots } = require('../lib/antilink');
-const { setAntilink, getAntilink, removeAntilink, allowLinks } = require('../lib/index');
+const { setAntilink, getAntilink, removeAntilink, allowLinks, blockLinks } = require('../lib/index');
 const isAdmin = require('../lib/isAdmin');
 
 async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSenderAdmin, message) {
