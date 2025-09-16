@@ -18,6 +18,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
+         path: ~/.npm
          cache: 'npm'
          cache-dependency-path: SpamHammer/testing/package-lock.json
 
