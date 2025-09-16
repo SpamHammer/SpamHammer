@@ -96,8 +96,7 @@ async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSend
             case 'list':
                 const allowedLinks = existingConfig?.allowedLinks || [];
                 const blockedLinks = existingConfig?.blockedLinks || [];
-                let listMessage = '*_Antilink Links List:_*\n\n';
-                listMessage += '*Allowed Links:*\n';
+                let listMessage = '*Allowed Links:*\n';
                 listMessage += allowedLinks.length > 0 ? allowedLinks.map(link => `- ${link}`).join('\n') : 'No allowed links.';
                 listMessage += '\n\n*Blocked Links:*\n';
                 listMessage += blockedLinks.length > 0 ? blockedLinks.map(link => `- ${link}`).join('\n') : 'No blocked links.';
