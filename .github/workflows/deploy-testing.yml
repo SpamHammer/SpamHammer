@@ -13,17 +13,24 @@ jobs:
       - name: Checkout latest code
         uses: actions/checkout@v4
         with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+         path: SpamHammer/testing
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+         node-version: 24.8
+         cache: 'npm'
+         cache-dependency-path: SpamHammer/testing/package-lock.json
 
       - name: Install dependencies
-        run: |
-          npm ci
+        working-directory: SpamHammer/testing
+        run: npm ci
           
       - name: Restart Node.js app in screen
+        working-directory: SpamHammer/testing  
         run: |
           # Kill old screen session if running
           screen -S spamHamBot -X quit || true
           
           # Start new detached screen session
-          screen -dmS spamHamBot bash -c 'node Repos/Node.js/Other/sprusrxeroxx/SpamHammer/SpamHammer/testing/index.js'
+          screen -dmS spamHamBot bash -c 'node index.js'
