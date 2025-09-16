@@ -1,5 +1,5 @@
 const { bots } = require('../lib/antilink');
-const { setAntilink, getAntilink, removeAntilink } = require('../lib/index');
+const { setAntilink, getAntilink, removeAntilink, allowLinks } = require('../lib/index');
 const isAdmin = require('../lib/isAdmin');
 
 async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSenderAdmin, message) {
@@ -19,9 +19,9 @@ async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSend
             return;
         }
 
+        const existingConfig = await getAntilink(chatId, 'on');
         switch (action) {
             case 'on':
-                const existingConfig = await getAntilink(chatId, 'on');
                 if (existingConfig?.enabled) {
                     await sock.sendMessage(chatId, { text: '*_Antilink is already on_*' }, { quoted: message });
                     return;
@@ -51,17 +51,65 @@ async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSend
                     }, { quoted: message });
                     return;
                 }
-                const setResult = await setAntilink(chatId, 'on', setAction);
+                const setActionResult = await setAntilink(chatId, 'on', setAction);
                 await sock.sendMessage(chatId, { 
-                    text: setResult ? `*_Antilink action set to ${setAction}_*` : '*_Failed to set Antilink action_*' 
+                    text: setActionResult ? `*_Antilink action set to ${setAction}_*` : '*_Failed to set Antilink action_*' 
                 }, { quoted: message });
                 break;
 
             case 'get':
-                const status = await getAntilink(chatId, 'on');
-                const actionConfig = await getAntilink(chatId, 'on');
                 await sock.sendMessage(chatId, { 
-                    text: `*_Antilink Configuration:_*\nStatus: ${status ? 'ON' : 'OFF'}\nAction: ${actionConfig ? actionConfig.action : 'Not set'}` 
+                    text: `*_Antilink Configuration:_*\nStatus: ${existingConfig?.enabled ? 'ON' : 'OFF'}\nAction: ${existingConfig ? existingConfig.action : 'Not set'}` 
+                }, { quoted: message });
+                break;
+
+            case 'allow':
+                if (args.length < 2) {
+                    await sock.sendMessage(chatId, { 
+                        text: `*_Please specify at list one link e.g.: ${prefix}antilink allow example.com_*` 
+                    }, { quoted: message });
+                    return;
+                }
+                // Store from args[1] to args[args.length - 1] in linksToAllow array
+                const linksToAllow = args.slice(1);
+                const allowLinksResult = await allowLinks(chatId, linksToAllow);
+                await sock.sendMessage(chatId, { 
+                    text: allowLinksResult ? `*_Antilink allowed links updated_*` : '*_Failed to update Antilink allowed links_*' 
+                }, { quoted: message });
+                break;
+
+            case 'block':
+                if (args.length < 2) {
+                    await sock.sendMessage(chatId, { 
+                        text: `*_Please specify at list one link e.g.: ${prefix}antilink block example.com_*` 
+                    }, { quoted: message });
+                    return;
+                }
+                // Store from args[1] to args[args.length - 1] in linksToBlock array
+                const linksToBlock = args.slice(1);
+                const blockLinksResult = await blockLinks(chatId, linksToBlock);
+                await sock.sendMessage(chatId, { 
+                    text: blockLinksResult ? `*_Antilink blocked links updated_*` : '*_Failed to update Antilink blocked links_*' 
+                }, { quoted: message });
+                break;
+
+            case 'mode':
+                if (args.length < 2) {
+                    await sock.sendMessage(chatId, { 
+                        text: `*_Please specify a mode: ${prefix}antilink mode blacklist | whitelist_*` 
+                    }, { quoted: message });
+                    return;
+                }
+                const setMode = args[1];
+                if (!['blacklist', 'whitelist'].includes(setMode)) {
+                    await sock.sendMessage(chatId, { 
+                        text: '*_Invalid mode. Choose blacklist or whitelist._*' 
+                    }, { quoted: message });
+                    return;
+                }
+                const setModeResult = await setAntilink(chatId, 'on', existingConfig ? existingConfig.action : 'delete', setMode);
+                await sock.sendMessage(chatId, { 
+                    text: setModeResult ? `*_Antilink mode set to ${setMode}_*` : '*_Failed to set Antilink mode_*' 
                 }, { quoted: message });
                 break;
 
