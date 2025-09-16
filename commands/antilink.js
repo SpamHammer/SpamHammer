@@ -59,7 +59,7 @@ async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSend
 
             case 'get':
                 await sock.sendMessage(chatId, { 
-                    text: `*_Antilink Configuration:_*\nStatus: ${existingConfig?.enabled ? 'ON' : 'OFF'}\nAction: ${existingConfig ? existingConfig.action : 'Not set'}` 
+                    text: `*_Antilink Configuration:_*\nStatus: ${existingConfig?.enabled ? 'ON' : 'OFF'}\nAction: ${existingConfig ? existingConfig.action : 'Not set'}\nMode: ${existingConfig ? existingConfig.mode : 'Not set'}`
                 }, { quoted: message });
                 break;
 
