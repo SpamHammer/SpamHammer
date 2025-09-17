@@ -1,5 +1,6 @@
+const { text } = require('stream/consumers');
 const { bots } = require('../lib/antilink');
-const { setAntilink, getAntilink, removeAntilink, allowLinks, blockLinks } = require('../lib/index');
+const { setAntilink, getAntilink, removeAntilink, allowLinks, blockLinks, forgetLinks } = require('../lib/index');
 const isAdmin = require('../lib/isAdmin');
 
 async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSenderAdmin, message) {
@@ -91,6 +92,33 @@ async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSend
                 await sock.sendMessage(chatId, { 
                     text: blockLinksResult ? `*_Antilink blocked links updated_*` : '*_Failed to update Antilink blocked links_*' 
                 }, { quoted: message });
+                break;
+            
+            case 'forget':
+                if (args.length < 2) {
+                    await sock.sendMessage(chatId, { 
+                        text: `*_Please specify at list one link or type all to forget all links e.g.: ${prefix}antilink forget example.com or ${prefix}antilink forget all_*`
+                    }, { quoted: message });
+                    return;
+                }
+
+                let forgetLinksResult = false;
+                // If args[1] is 'all', forget all links
+                if (args[1] === 'all') {
+                    const allowedLinks = existingConfig?.allowedLinks || [],
+                        blockedLinks = existingConfig?.blockedLinks || [],
+                        allLinks = [...new Set([...allowedLinks, ...blockedLinks])];
+                    
+                    forgetLinksResult = await forgetLinks(chatId, allLinks);
+                } else {
+                    // Remove from args[1] to args[args.length - 1] in linksToForget array
+                    const linksToForget = args.slice(1);
+
+                    forgetLinksResult = await forgetLinks(chatId, linksToForget, true);
+                    await sock.sendMessage(chatId, { 
+                        text: forgetLinksResult ? `*_Links forgotten_*` : '*_Failed to forget links_*'
+                    }, { quoted: message });
+                }
                 break;
 
             case 'list':
