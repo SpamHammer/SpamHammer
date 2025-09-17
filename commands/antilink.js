@@ -115,10 +115,10 @@ async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSend
                     const linksToForget = args.slice(1);
 
                     forgetLinksResult = await forgetLinks(chatId, linksToForget, true);
-                    await sock.sendMessage(chatId, { 
-                        text: forgetLinksResult ? `*_Links forgotten_*` : '*_Failed to forget links_*'
-                    }, { quoted: message });
                 }
+                await sock.sendMessage(chatId, { 
+                    text: forgetLinksResult ? `*_Links forgotten_*` : '*_Failed to forget links_*'
+                }, { quoted: message });
                 break;
 
             case 'list':
