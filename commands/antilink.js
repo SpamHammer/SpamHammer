@@ -1,6 +1,6 @@
 const { text } = require('stream/consumers');
 const { bots } = require('../lib/antilink');
-const { setAntilink, getAntilink, removeAntilink, allowLinks, blockLinks, forgetLinks } = require('../lib/index');
+const { setAntilink, getAntilink, removeAntilink, allowLinks, blockLinks, forgetLinks, resetAntilinkSettings } = require('../lib/index');
 const isAdmin = require('../lib/isAdmin');
 
 async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSenderAdmin, message) {
@@ -149,6 +149,11 @@ async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSend
                 await sock.sendMessage(chatId, { 
                     text: setModeResult ? `*_Antilink mode set to ${setMode}_*` : '*_Failed to set Antilink mode_*' 
                 }, { quoted: message });
+                break;
+
+            case 'reset':
+                const resetResult = await resetAntilinkSettings(chatId);
+                await sock.sendMessage(chatId, { text: resetResult ? '*_Antilink settings reset_*' : '*_Failed to reset Antilink settings_*' }, { quoted: message });
                 break;
 
             default:
