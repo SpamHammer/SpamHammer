@@ -75,7 +75,7 @@ async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSend
                 const linksToAllow = args.slice(1);
                 const allowLinksResult = await allowLinks(chatId, linksToAllow);
                 await sock.sendMessage(chatId, { 
-                    text: allowLinksResult ? `*_Antilink allowed links updated_*` : '*_Failed to update Antilink allowed links_*' 
+                    text: allowLinksResult ? `*_Allowed links updated_*` : '*_Failed to update Antilink allowed links_*' 
                 }, { quoted: message });
                 break;
 
@@ -90,7 +90,7 @@ async function handleAntilinkCommand(sock, chatId, userMessage, senderId, isSend
                 const linksToBlock = args.slice(1);
                 const blockLinksResult = await blockLinks(chatId, linksToBlock);
                 await sock.sendMessage(chatId, { 
-                    text: blockLinksResult ? `*_Antilink blocked links updated_*` : '*_Failed to update Antilink blocked links_*' 
+                    text: blockLinksResult ? `*_Blocked links updated_*` : '*_Failed to update Antilink blocked links_*' 
                 }, { quoted: message });
                 break;
             
