@@ -1,9 +1,10 @@
 ---
 name: Bug Report
 about: Create a report to help us improve
-title: "[BUG]"
-labels: bug
+title: "[BUG] <Bug Title Here>"
 assignees: ''
+labels: bug
+issue-type: bug
 
 ---
 
@@ -26,10 +27,8 @@ A clear and concise description of what you expected to happen.
 
 ## Actual Behaviour
 
+A clear and concise description of what actually happens.
+
 ## Screenshots
 
-If applicable, add screenshots to help explain your problem.
-
-## Additional context
-
-Add any other context about the problem here.
+If applicable, drag and drop screenshots here to help explain your problem.
