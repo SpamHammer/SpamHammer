@@ -292,6 +292,6 @@ Allows all links except those in `blockedLinks`.
 
 3. `config.js`: Provides configuration (e.g., `WARN_COUNT`).
 
-## Authors
+## 7. Authors
 
 Sherpad Ndabambi (sgndabambi@gmail.com)
