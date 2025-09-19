@@ -2,6 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const isAdmin = require('../lib/isAdmin');
 
+// Define paths
+const databaseDir = path.join(process.cwd(), 'data');
+const warningsPath = path.join(databaseDir, 'warnings.json');
+
 // Initialize warnings file if it doesn't exist
 function initializeWarningsFile() {
     // Create database directory if it doesn't exist
