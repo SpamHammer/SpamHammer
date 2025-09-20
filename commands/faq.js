@@ -20,7 +20,6 @@ async function faqCommand(sock, chatId, message, args, senderId) {
                 await handleAddFAQ(sock, chatId, groupId, args.slice(1), senderId, message);
                 break;
                 
-            case 'delete':
             case 'del':
                 await handleDeleteFAQ(sock, chatId, groupId, args.slice(1), senderId, message);
                 break;
@@ -59,11 +58,9 @@ async function showAllFAQs(sock, chatId, groupId, message) {
         }, { quoted: message });
         return;
     }
-    
-    let faqText = `╔═══════════════════╗\n`;
-    faqText += `   📋 *FREQUENTLY ASKED QUESTIONS*\n`;
-    faqText += `╚═══════════════════╝\n\n`;
-    
+
+    let faqText = `   📋 *FREQUENTLY ASKED QUESTIONS*\n`;
+
     // Show first 5 FAQs with preview
     const displayFAQs = faqs.slice(0, 5);
     
@@ -102,9 +99,8 @@ async function showSpecificFAQ(sock, chatId, groupId, faqId, message) {
         return;
     }
     
-    const faqText = `╔═══════════════════╗\n` +
+    const faqText =
                    `   📋 *FAQ #${faq.id}*\n` +
-                   `╚═══════════════════╝\n\n` +
                    `❓ *Question:*\n${faq.question}\n\n` +
                    `💡 *Answer:*\n${faq.answer}\n\n` +
                    `━━━━━━━━━━━━━━━━━━━━━━\n` +
@@ -238,9 +234,8 @@ async function handleSearchFAQ(sock, chatId, groupId, args, message) {
 }
 
 async function showFAQHelp(sock, chatId, message) {
-    const helpText = `╔═══════════════════╗\n` +
+    const helpText =
                     `   📋 *FAQ COMMANDS*\n` +
-                    `╚═══════════════════╝\n\n` +
                     `📖 *.faq* - Show all FAQs\n` +
                     `🔍 *.faq search <keyword>* - Search FAQs\n` +
                     `📄 *.faq <number>* - View specific FAQ\n\n` +
