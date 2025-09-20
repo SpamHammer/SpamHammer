@@ -3,7 +3,7 @@ const path = require('path');
 const isAdmin = require('../lib/isAdmin');
 
 // Define paths
-const databaseDir = path.join(process.cwd(), 'data');
+const databaseDir = path.join(__dirname, '..', 'data');
 const warningsPath = path.join(databaseDir, 'warnings.json');
 
 // Initialize warnings file if it doesn't exist
