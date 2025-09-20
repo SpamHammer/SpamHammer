@@ -1,29 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const isAdmin = require('../lib/isAdmin');
+const config = require('../config');
+const { incrementWarningCount, resetWarningCount } = require('../lib/index');
 
-// Define paths
-const databaseDir = path.join(__dirname, '..', 'data');
-const warningsPath = path.join(databaseDir, 'warnings.json');
-
-// Initialize warnings file if it doesn't exist
-function initializeWarningsFile() {
-    // Create database directory if it doesn't exist
-    if (!fs.existsSync(databaseDir)) {
-        fs.mkdirSync(databaseDir, { recursive: true });
-    }
-    
-    // Create warnings.json if it doesn't exist
-    if (!fs.existsSync(warningsPath)) {
-        fs.writeFileSync(warningsPath, JSON.stringify({}), 'utf8');
-    }
-}
+const WARN_COUNT = config.WARN_COUNT || 3;
 
 async function warnCommand(sock, chatId, senderId, mentionedJids, message) {
     try {
-        // Initialize files first
-        initializeWarningsFile();
-
         // First check if it's a group
         if (!chatId.endsWith('@g.us')) {
             await sock.sendMessage(chatId, { 
@@ -79,24 +63,10 @@ async function warnCommand(sock, chatId, senderId, mentionedJids, message) {
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         try {
-            // Read warnings, create empty object if file is empty
-            let warnings = {};
-            try {
-                warnings = JSON.parse(fs.readFileSync(warningsPath, 'utf8'));
-            } catch (error) {
-                warnings = {};
-            }
-
-            // Initialize nested objects if they don't exist
-            if (!warnings[chatId]) warnings[chatId] = {};
-            if (!warnings[chatId][userToWarn]) warnings[chatId][userToWarn] = 0;
-            
-            warnings[chatId][userToWarn]++;
-            fs.writeFileSync(warningsPath, JSON.stringify(warnings, null, 2));
-
+            const newCount = await incrementWarningCount(chatId, userToWarn);
             const warningMessage = `*『 WARNING ALERT 』*\n\n` +
                 `👤 *Warned User:* @${userToWarn.split('@')[0]}\n` +
-                `⚠️ *Warning Count:* ${warnings[chatId][userToWarn]}/3\n` +
+                `⚠️ *Warning Count:* ${newCount}/${WARN_COUNT}\n` +
                 `👑 *Warned By:* @${senderId.split('@')[0]}\n\n` +
                 `📅 *Date:* ${new Date().toLocaleString()}`;
 
@@ -106,16 +76,15 @@ async function warnCommand(sock, chatId, senderId, mentionedJids, message) {
             });
 
             // Auto-kick after 3 warnings
-            if (warnings[chatId][userToWarn] >= 3) {
+            if (newCount >= WARN_COUNT) {
                 // Add delay to avoid rate limiting
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
                 await sock.groupParticipantsUpdate(chatId, [userToWarn], "remove");
-                delete warnings[chatId][userToWarn];
-                fs.writeFileSync(warningsPath, JSON.stringify(warnings, null, 2), 'utf8');
+                await resetWarningCount(chatId, userToWarn);
                 
                 const kickMessage = `*『 AUTO-KICK 』*\n\n` +
-                    `@${userToWarn.split('@')[0]} has been removed from the group after receiving 3 warnings! ⚠️`;
+                    `@${userToWarn.split('@')[0]} has been removed from the group after receiving ${WARN_COUNT} warnings! ⚠️`;
 
                 await sock.sendMessage(chatId, { 
                     text: kickMessage,
