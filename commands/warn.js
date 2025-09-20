@@ -15,8 +15,7 @@ function initializeWarningsFile() {
     
     // Create warnings.json if it doesn't exist
     if (!fs.existsSync(warningsPath)) {
-        // use options object to be explicit about encoding
-        fs.writeFileSync(warningsPath, JSON.stringify({}), { encoding: 'utf8' });
+        fs.writeFileSync(warningsPath, JSON.stringify({}), 'utf8');
     }
 }
 
@@ -83,8 +82,7 @@ async function warnCommand(sock, chatId, senderId, mentionedJids, message) {
             // Read warnings, create empty object if file is empty
             let warnings = {};
             try {
-                const raw = fs.readFileSync(warningsPath, 'utf8').trim();
-                warnings = raw ? JSON.parse(raw) : {};
+                warnings = JSON.parse(fs.readFileSync(warningsPath, 'utf8'));
             } catch (error) {
                 warnings = {};
             }
@@ -94,7 +92,7 @@ async function warnCommand(sock, chatId, senderId, mentionedJids, message) {
             if (!warnings[chatId][userToWarn]) warnings[chatId][userToWarn] = 0;
             
             warnings[chatId][userToWarn]++;
-            fs.writeFileSync(warningsPath, JSON.stringify(warnings, null, 2), { encoding: 'utf8' });
+            fs.writeFileSync(warningsPath, JSON.stringify(warnings, null, 2));
 
             const warningMessage = `*『 WARNING ALERT 』*\n\n` +
                 `👤 *Warned User:* @${userToWarn.split('@')[0]}\n` +
@@ -114,7 +112,7 @@ async function warnCommand(sock, chatId, senderId, mentionedJids, message) {
 
                 await sock.groupParticipantsUpdate(chatId, [userToWarn], "remove");
                 delete warnings[chatId][userToWarn];
-                fs.writeFileSync(warningsPath, JSON.stringify(warnings, null, 2), { encoding: 'utf8' });
+                fs.writeFileSync(warningsPath, JSON.stringify(warnings, null, 2), 'utf8');
                 
                 const kickMessage = `*『 AUTO-KICK 』*\n\n` +
                     `@${userToWarn.split('@')[0]} has been removed from the group after receiving 3 warnings! ⚠️`;
