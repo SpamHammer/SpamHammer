@@ -26,7 +26,7 @@ async function warningsCommand(sock, chatId, mentionedJidList) {
 
     // mention the user in the reply
     await sock.sendMessage(chatId, { 
-        text: `@${userToCheck.split('@')[0]} has ${warningCount} warning(s).`,
+        text: `User has ${warningCount} warning(s).`,
     });
 }
 
