@@ -93,7 +93,6 @@ async function warnCommand(sock, chatId, senderId, mentionedJids, message) {
             
             warnings[chatId][userToWarn]++;
             fs.writeFileSync(warningsPath, JSON.stringify(warnings, null, 2));
-            console.log(fs.readFileSync(warningsPath, 'utf8'));
 
             const warningMessage = `*『 WARNING ALERT 』*\n\n` +
                 `👤 *Warned User:* @${userToWarn.split('@')[0]}\n` +
