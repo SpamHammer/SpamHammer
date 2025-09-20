@@ -38,6 +38,7 @@ const tagCommand = require('./commands/tag');
 const jokeCommand = require('./commands/joke');
 const quoteCommand = require('./commands/quote');
 const factCommand = require('./commands/fact');
+const faqCommand = require('./commands/faq');
 const weatherCommand = require('./commands/weather');
 const newsCommand = require('./commands/news');
 const kickCommand = require('./commands/kick');
@@ -466,6 +467,10 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 break;
             case userMessage === '.fact':
                 await factCommand(sock, chatId, message, message);
+                break;
+            case userMessage === '.faq' || userMessage === '.faqs' || userMessage.startsWith('.faq '):
+                const faqArgs = userMessage.startsWith('.faq ') ? userMessage.slice(5).trim().split(' ') : [];
+                await faqCommand(sock, chatId, message, faqArgs, senderId);
                 break;
             case userMessage.startsWith('.weather'):
                 const city = userMessage.slice(9).trim();
