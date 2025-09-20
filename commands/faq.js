@@ -110,16 +110,17 @@ async function showSpecificFAQ(sock, chatId, groupId, faqId, message) {
 }
 
 async function handleAddFAQ(sock, chatId, groupId, args, senderId, message) {
-    const isGroup = chatId.endsWith('@g.us');
+    // const isGroup = chatId.endsWith('@g.us');
     
     // Check if user is admin
-    if (isGroup && !(await isAdmin(chatId, senderId, sock))) {
+    const { isSenderAdmin } = await isAdmin(sock, chatId, senderId);
+
+    if (!isSenderAdmin) {
         await sock.sendMessage(chatId, {
             text: '❌ Only group admins can add FAQs.'
         }, { quoted: message });
         return;
-    }
-    
+    }   
     
     const fullText = args.join(' ');
     const parts = fullText.split('|');
@@ -162,7 +163,9 @@ async function handleDeleteFAQ(sock, chatId, groupId, args, senderId, message) {
     // const isGroup = chatId.endsWith('@g.us');
     
     // Check if user is admin
-    if (!(await isAdmin(chatId, senderId, sock))) {
+   const { isSenderAdmin } = await isAdmin(sock, chatId, senderId);
+
+    if (!isSenderAdmin) {
         await sock.sendMessage(chatId, {
             text: '❌ Only group admins can delete FAQs.'
         }, { quoted: message });
