@@ -14,15 +14,20 @@ function loadWarnings() {
 async function warningsCommand(sock, chatId, mentionedJidList) {
     const warnings = loadWarnings();
 
-    if (mentionedJidList.length === 0) {
+    if (!mentionedJidList || mentionedJidList.length === 0) {
         await sock.sendMessage(chatId, { text: 'Please mention a user to check warnings.' });
         return;
     }
 
     const userToCheck = mentionedJidList[0];
-    const warningCount = warnings[userToCheck] || 0;
 
-    await sock.sendMessage(chatId, { text: `User has ${warningCount} warning(s).` });
+    // FIX: look up the per-chat structure
+    const warningCount = (warnings[chatId] && warnings[chatId][userToCheck]) || 0;
+
+    // mention the user in the reply
+    await sock.sendMessage(chatId, { 
+        text: `@${userToCheck.split('@')[0]} has ${warningCount} warning(s).`,
+    });
 }
 
 module.exports = warningsCommand;
